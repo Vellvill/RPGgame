@@ -21,6 +21,11 @@ type Config struct {
 		Host string
 		Port string
 	}
+	Redis struct {
+		RHost string
+		RPort string
+		RPass string
+	}
 }
 
 var (
@@ -60,7 +65,17 @@ func NewConfig() (*Config, error) {
 				Port string
 			}{
 				Host: parseENV("SERVICE_HOST", "service"),
-				Port: parseENV("SERVICE_PORT", "40000")},
+				Port: parseENV("SERVICE_PORT", "40000"),
+			},
+			Redis: struct {
+				RHost string
+				RPort string
+				RPass string
+			}{
+				RHost: parseENV("REDIS_HOSTT", "cache"),
+				RPort: parseENV("REDIS_PORT", "6379"),
+				RPass: parseENV("REDIS_PASS", ""),
+			},
 		}
 	})
 	if err != nil {
@@ -70,7 +85,6 @@ func NewConfig() (*Config, error) {
 }
 
 func parseENV(env, defaultValue string) string {
-
 	if value, exists := os.LookupEnv(env); exists {
 		return value
 	}
